@@ -31,23 +31,23 @@ const Feed = () => {
     };
   };
 
-  const delayedFilterPosts = debounce((text) => {
-    if (text === '') {
-      setPosts(defaultPosts);
-    } else {
-      const regex = new RegExp(text, 'i');
-      const filteredPosts = defaultPosts.filter((post) =>
+  const filterPosts = (text) => {
+    const regex = new RegExp(text, 'i');
+    const filteredPosts = defaultPosts.filter((post) =>
         regex.test(post.creator.username) ||
         regex.test(post.prompt) ||
         regex.test(post.tag)
       );
-      setPosts(filteredPosts);
-    }
+    setPosts(filteredPosts);
+  }
+
+  const delayedFilterPosts = debounce((text) => {
+    filterPosts(text);
   }, 750);
 
   const handleSearchChange = (e) => {
     setSearchText(e.target.value);
-    delayedFilterPosts(searchText);
+    delayedFilterPosts(e.target.value);
   }
 
   useEffect(() => {
@@ -74,12 +74,23 @@ const Feed = () => {
           required
         />
       </form>
-      <PromptCardList
-        data={posts}
-        handleTagClick={() => {
-
-        }}
-      />
+      {searchText === '' ? (
+        <PromptCardList
+          data={defaultPosts}
+          handleTagClick={(tag) => {
+            setSearchText(tag);
+            filterPosts(tag);
+          }}
+        />
+      ) : (
+        <PromptCardList
+          data={posts}
+          handleTagClick={(tag) => {
+            setSearchText(tag);
+            filterPosts(tag);
+          }}
+        />
+      )}
     </section>
   )
 }
