@@ -18,24 +18,23 @@ const UpdatePrompt = () => {
 
   useEffect(() => {
     const getPromptDetails = async () => {
-        const response = await fetch(`/api/prompt/${promptId}`);
-        const data = await response.json();
-        
-        setPost({
-            prompt: data.prompt,
-            tag: data.tag
-        });
+      const response = await fetch(`/api/prompt/${promptId}`);
+      const data = await response.json();
+
+      setPost({
+        prompt: data.prompt,
+        tag: data.tag
+      });
     }
 
-    if(promptId) getPromptDetails();
-
+    if (promptId) getPromptDetails();
   }, [promptId])
 
   const updatePrompt = async (e) => {
     e.preventDefault();
     setSubmitting(true);
 
-    if(!promptId) return alert("Prompt id not found");
+    if (!promptId) return alert("Prompt id not found");
 
     try {
       const response = await fetch(`/api/prompt/${promptId}`, {
@@ -46,7 +45,7 @@ const UpdatePrompt = () => {
         })
       })
 
-      if(response.ok){
+      if (response.ok) {
         router.push('/profile');
       }
     } catch (error) {
@@ -57,16 +56,20 @@ const UpdatePrompt = () => {
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Form
-          type="Update"
-          post={post}
-          setPost={setPost}
-          submitting={submitting}
-          handleSubmit={updatePrompt}
-      />
-    </Suspense>
+    <Form
+      type="Update"
+      post={post}
+      setPost={setPost}
+      submitting={submitting}
+      handleSubmit={updatePrompt}
+    />
   )
 }
 
-export default UpdatePrompt
+const WrappedUpdatePrompt = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <UpdatePrompt />
+  </Suspense>
+);
+
+export default WrappedUpdatePrompt;
