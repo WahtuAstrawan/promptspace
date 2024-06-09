@@ -9,11 +9,6 @@ const handler = NextAuth({
         GoogleProvider({
             clientId: process.env.GOOGLE_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            authorization: {
-                params: {
-                    redirect_uri: "https://promptspace-dc8w26s7q-wahtu-astrawans-projects.vercel.app/api/auth/callback/google"
-                }
-            }
         })
     ],
     callbacks: {
