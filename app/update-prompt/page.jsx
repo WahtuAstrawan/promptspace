@@ -1,20 +1,20 @@
 "use client";
 
-import { useState, useEffect, Suspense } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
-import Form from '@components/Form';
+import Form from "@components/Form";
 
 const UpdatePrompt = () => {
   const router = useRouter();
 
   const [submitting, setSubmitting] = useState(false);
   const [post, setPost] = useState({
-    prompt: '',
-    tag: ''
+    prompt: "",
+    tag: "",
   });
   const searchParams = useSearchParams();
-  const promptId = searchParams.get('id');
+  const promptId = searchParams.get("id");
 
   useEffect(() => {
     const getPromptDetails = async () => {
@@ -23,12 +23,12 @@ const UpdatePrompt = () => {
 
       setPost({
         prompt: data.prompt,
-        tag: data.tag
+        tag: data.tag,
       });
-    }
+    };
 
     if (promptId) getPromptDetails();
-  }, [promptId])
+  }, [promptId]);
 
   const updatePrompt = async (e) => {
     e.preventDefault();
@@ -38,22 +38,22 @@ const UpdatePrompt = () => {
 
     try {
       const response = await fetch(`/api/prompt/${promptId}`, {
-        method: 'PATCH',
+        method: "PATCH",
         body: JSON.stringify({
           prompt: post.prompt,
-          tag: post.tag
-        })
-      })
+          tag: post.tag,
+        }),
+      });
 
       if (response.ok) {
-        router.push('/profile');
+        router.push("/profile");
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
       setSubmitting(false);
     }
-  }
+  };
 
   return (
     <Form
@@ -63,8 +63,8 @@ const UpdatePrompt = () => {
       submitting={submitting}
       handleSubmit={updatePrompt}
     />
-  )
-}
+  );
+};
 
 const WrappedUpdatePrompt = () => (
   <Suspense fallback={<div>Loading...</div>}>
